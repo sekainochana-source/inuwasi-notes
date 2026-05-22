@@ -16,6 +16,10 @@ RAIDER RAIDERの"Now現状が戦場で日々Living Living now 喝采を永遠を
 **としぼ**  2:12
 <font color="red">カリヲリ</font>の２サビ
 
+**やす**  2:47
+<font color="red">ライカ隊長</font>の光を超えた終着点のソロがカッコよくて痺れる
+
+## 最後サビ
 **あーちゃん**  3:00
 RAIDER×RAIDERの<font color="red">すずめちゃん</font>「keep on move in」で手を頭の上にぴゅんってしてるとこ！歌い方表情含めて最高にどぅぁあってなります！
 
