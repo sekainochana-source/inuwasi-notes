@@ -13,8 +13,13 @@ HyperNovaの1番のサビ前の夢の中描く景色僕等で見せての<font c
 
 **緑穂**   0:50
 <font color="red">六椛さん</font>がHyper Nova 1番の「For getting faster Lets go!」で👉👆って笑顔で撃ち抜いてるとこがメロいです！！
-## サビ
 
+## サビ
 
 ## 間奏
 **●●●●●●**  
+
+## アウトロ
+**はるき** <font color="red">かみからしも</font> 3:00
+
+<font color="red">はのんまゆ</font>の最後のキメ顔
