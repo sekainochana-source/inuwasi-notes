@@ -334,9 +334,120 @@
 
         .kbd-hint { position: fixed; bottom: 16px; right: 18px; font-size: .66rem; color: var(--text-secondary); opacity: .4; pointer-events: none; letter-spacing: .06em; }
         @media (max-width: 768px) { .kbd-hint { display: none; } }
+
+        /* ============================================================
+           🔒 パスワード画面
+           ============================================================ */
+        .lock-screen {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            background:
+                radial-gradient(ellipse at 20% 20%, rgba(216,180,254,.12) 0%, transparent 55%),
+                radial-gradient(ellipse at 80% 80%, rgba(167,139,250,.12) 0%, transparent 55%),
+                #0b0b18;
+            padding: 32px;
+            text-align: center;
+            transition: opacity .4s ease, transform .4s ease;
+        }
+        .lock-screen.hide {
+            opacity: 0;
+            transform: scale(1.04);
+            pointer-events: none;
+        }
+        .lock-logo {
+            width: 90px;
+            height: 90px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 18px rgba(216,180,254,.35));
+            margin-bottom: 4px;
+        }
+        .lock-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: .04em;
+        }
+        .lock-sub {
+            font-size: .78rem;
+            color: var(--text-secondary);
+            letter-spacing: .1em;
+        }
+        .lock-input-wrap {
+            position: relative;
+            width: 100%;
+            max-width: 280px;
+        }
+        .lock-input {
+            width: 100%;
+            padding: 13px 48px 13px 18px;
+            background: rgba(255,255,255,.06);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            color: var(--text-primary);
+            font-size: .95rem;
+            outline: none;
+            text-align: center;
+            letter-spacing: .12em;
+            transition: border-color .2s;
+        }
+        .lock-input:focus { border-color: var(--accent-start); }
+        .lock-input.error { border-color: #f87171; animation: shake .3s ease; }
+        .lock-btn {
+            position: absolute;
+            right: 6px; top: 50%;
+            transform: translateY(-50%);
+            width: 34px; height: 34px;
+            border-radius: 50%;
+            border: none;
+            background: var(--accent-gradient);
+            color: #fff;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: opacity .2s;
+        }
+        .lock-btn:hover { opacity: .85; }
+        .lock-error {
+            font-size: .76rem;
+            color: #f87171;
+            height: 16px;
+            transition: opacity .2s;
+        }
+        @keyframes shake {
+            0%,100% { transform: translateX(0); }
+            25%      { transform: translateX(-6px); }
+            75%      { transform: translateX(6px); }
+        }
     </style>
 </head>
 <body>
+<!-- ===== パスワード画面 ===== -->
+<div class="lock-screen" id="lockScreen">
+    <img class="lock-logo" src="logo.png" alt="INUWASI">
+    <div class="lock-title">INUWASIのここがいい</div>
+    <div class="lock-sub">パスワードを入力してください</div>
+    <div class="lock-input-wrap">
+        <input class="lock-input" id="lockInput" type="password"
+               placeholder="••••••••"
+               autocomplete="current-password"
+               onkeydown="if(event.key==='Enter') tryUnlock()">
+        <button class="lock-btn" onclick="tryUnlock()" aria-label="ログイン">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                <polygon points="5 3 19 12 5 21 5 3"/>
+            </svg>
+        </button>
+    </div>
+    <div class="lock-error" id="lockError"></div>
+</div>
+
 <div class="app">
 
     <header class="app-header">
@@ -418,6 +529,50 @@
 
 <script>
 'use strict';
+
+/* ================================================================
+   🔒 パスワード認証
+   ================================================================
+   パスワードを変更したい場合は Claude に伝えてください。
+   現在のパスワード: inuwasi2024
+================================================================ */
+const PASSWORD_HASH = '2fa227a536902da81e4d818fda418f93a4a45dba99ec9aad833fa6139a927a38';
+
+async function sha256(text) {
+    const buf  = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+async function tryUnlock() {
+    const input = document.getElementById('lockInput');
+    const error = document.getElementById('lockError');
+    const hash  = await sha256(input.value);
+    if (hash === PASSWORD_HASH) {
+        localStorage.setItem('inuwasi_auth', hash);
+        document.getElementById('lockScreen').classList.add('hide');
+        setTimeout(() => document.getElementById('lockScreen').remove(), 420);
+    } else {
+        input.classList.add('error');
+        error.textContent = 'パスワードが違います';
+        input.value = '';
+        setTimeout(() => { input.classList.remove('error'); error.textContent = ''; }, 1500);
+    }
+}
+
+// 認証済みならロック画面をスキップ
+(async () => {
+    const saved = localStorage.getItem('inuwasi_auth');
+    if (saved && saved === PASSWORD_HASH) {
+        document.getElementById('lockScreen').remove();
+    } else {
+        // 未認証：ロック画面にフォーカス
+        window.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('lockInput').focus();
+        });
+    }
+})();
+
+/* ================================================================ */
 
 if (typeof marked !== 'undefined') {
     marked.setOptions({ breaks: true, gfm: true });
