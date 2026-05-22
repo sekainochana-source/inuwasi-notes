@@ -91,7 +91,9 @@
             position: relative;
             z-index: 100;
         }
-        .header-brand { display: flex; flex-direction: column; gap: 3px; }
+        .header-brand { display: flex; flex-direction: row; align-items: center; gap: 12px; }
+        .header-logo { height: 38px; width: 38px; object-fit: contain; filter: drop-shadow(0 0 8px rgba(216,180,254,.35)); flex-shrink: 0; }
+        .header-brand-text { display: flex; flex-direction: column; gap: 3px; }
         .app-title {
             font-size: clamp(1.05rem, 2.6vw, 1.5rem);
             font-weight: 800;
@@ -459,8 +461,11 @@
 
     <header class="app-header">
         <div class="header-brand">
-            <div class="app-title">INUWASIのここがいい</div>
-            <div class="app-tagline">Song Notes</div>
+            <div class="header-brand-text">
+                <div class="app-title">INUWASIのここがいい</div>
+                <div class="app-tagline">Song Notes</div>
+            </div>
+            <img class="header-logo" src="logo.png" alt="INUWASI">
         </div>
         <div class="header-right">
             <button class="btn btn-icon" onclick="toggleSidebar()" aria-label="メニュー">
