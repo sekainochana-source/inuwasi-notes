@@ -26,3 +26,7 @@ RAIDER×RAIDERの<font color="red">すずめちゃん</font>「keep on move in�
 **はるき** <font color="red">かみて</font> 3:39　
 
 <font color="red">はのんまゆ</font>の最後のキメ顔
+
+**夜葉みなか** <font color="red">引き</font> 3:39　
+
+全員が6人で歩いてくるところ
