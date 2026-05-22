@@ -8,7 +8,7 @@
 **のりゆき**  
 HYPER NOVAの「夢の中描く景色僕等で魅せて」の時に<font color="red">ライカちゃん</font>が髪を振り乱して踊っているところが好き
 
-**緑穂** 
+**緑穂**  
 <font color="red">六椛さん</font>がHyper Nova 1番の「For getting faster Lets go!」で👉👆って笑顔で撃ち抜いてるとこがメロいです！！
 ## サビ
 **あいぽん**  
