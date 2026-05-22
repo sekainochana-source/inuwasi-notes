@@ -21,3 +21,8 @@ RAIDER×RAIDERの<font color="red">すずめちゃん</font>「keep on move in�
 
 ## 間奏
 **●●●●●●**  
+
+## アウトロ
+**はるき** <font color="red">かみて</font> 3:39　
+
+<font color="red">はのんまゆ</font>の最後のキメ顔
