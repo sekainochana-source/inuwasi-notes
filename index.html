@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INUWASIのここがいい</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
+    <style>
+        /* ============================================================
+           🎨 カスタマイズ設定
+           ============================================================ */
+        :root {
+            --bg-image: none;
+            --accent-start: #d8b4fe;
+            --accent-end:   #a78bfa;
+            --accent-gradient: linear-gradient(135deg, var(--accent-start), var(--accent-end));
+            --bg-dark:        #0b0b18;
+            --bg-sidebar:     rgba(11, 11, 24, 0.60);
+            --bg-panel:       rgba(255, 255, 255, 0.05);
+            --bg-panel-hover: rgba(255, 255, 255, 0.10);
+            --text-primary:   #f2f2f5;
+            --text-secondary: rgba(242, 242, 245, 0.50);
+            --border:         rgba(255, 255, 255, 0.09);
+        }
+
+        html, body, input, button, select, textarea {
+            font-family:
+                'M PLUS Rounded 1c',
+                'Hiragino Kaku Gothic ProN',
+                'Hiragino Sans',
+                'Yu Gothic UI',
+                'Yu Gothic',
+                'Meiryo UI',
+                'Meiryo',
+                sans-serif;
+        }
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; font-family: inherit; }
+
+        body {
+            background-color: var(--bg-dark);
+            background-image: var(--bg-image);
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: var(--text-primary);
+            min-height: 100dvh;
+            overflow: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(ellipse at 18% 18%, rgba(216,180,254,.10) 0%, transparent 55%),
+                radial-gradient(ellipse at 82% 82%, rgba(167,139,250,.10) 0%, transparent 55%),
+                linear-gradient(160deg, rgba(11,11,24,.92) 0%, rgba(18,8,38,.96) 100%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .app {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100dvh;
+        }
+
+        /* ヘッダー */
+        .app-header {
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 28px;
+            height: 64px;
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(24px) saturate(180%);
+            background: rgba(11, 11, 24, 0.68);
+            position: relative;
+            z-index: 100;
+        }
+        .header-brand { display: flex; flex-direction: column; gap: 3px; }
+        .app-title {
+            font-size: clamp(1.05rem, 2.6vw, 1.5rem);
+            font-weight: 800;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: .03em;
+            line-height: 1.2;
+        }
+        .app-tagline {
+            font-size: .64rem;
+            letter-spacing: .20em;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            font-weight: 300;
+        }
+        .header-right { display: flex; align-items: center; gap: 8px; }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 8px 16px;
+            border-radius: 100px;
+            border: 1px solid var(--border);
+            background: var(--bg-panel);
+            color: var(--text-primary);
+            font-size: .80rem;
+            cursor: pointer;
+            transition: all .2s ease;
+            white-space: nowrap;
+            user-select: none;
+        }
+        .btn:hover { background: var(--bg-panel-hover); border-color: var(--accent-start); transform: translateY(-1px); }
+        .btn-icon { padding: 8px; border-radius: 50%; flex-shrink: 0; display: none; }
+
+        /* メインボディ */
+        .app-body { display: flex; flex: 1; overflow: hidden; position: relative; }
+
+        /* サイドバー */
+        .sidebar {
+            width: 265px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid var(--border);
+            background: var(--bg-sidebar);
+            backdrop-filter: blur(24px) saturate(160%);
+            overflow: hidden;
+            transition: transform .3s cubic-bezier(.4,0,.2,1);
+        }
+
+        /* セットリストタブ */
+        .setlist-tabs {
+            flex-shrink: 0;
+            display: flex;
+            gap: 5px;
+            padding: 10px 10px 8px;
+            border-bottom: 1px solid var(--border);
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        .setlist-tabs::-webkit-scrollbar { display: none; }
+        .setlist-tab {
+            flex-shrink: 0;
+            padding: 5px 13px;
+            border-radius: 100px;
+            border: 1px solid var(--border);
+            background: var(--bg-panel);
+            color: var(--text-secondary);
+            font-size: .72rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all .18s;
+            white-space: nowrap;
+            user-select: none;
+            line-height: 1.4;
+        }
+        .setlist-tab:hover { background: var(--bg-panel-hover); color: var(--text-primary); border-color: rgba(255,255,255,.2); }
+        .setlist-tab.active { background: var(--accent-gradient); border-color: transparent; color: #fff; font-weight: 700; }
+
+        .sidebar-top { flex-shrink: 0; padding: 14px 12px 10px; border-bottom: 1px solid var(--border); }
+        .search-wrap { position: relative; }
+        .search-icon-el { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); pointer-events: none; }
+        .search-input {
+            width: 100%;
+            padding: 9px 12px 9px 32px;
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            color: var(--text-primary);
+            font-size: .80rem;
+            outline: none;
+            transition: border-color .2s;
+        }
+        .search-input::placeholder { color: var(--text-secondary); }
+        .search-input:focus { border-color: var(--accent-start); }
+
+        .song-count { flex-shrink: 0; padding: 7px 16px 3px; font-size: .66rem; letter-spacing: .14em; color: var(--text-secondary); text-transform: uppercase; }
+        .song-list { flex: 1; overflow-y: auto; padding: 6px 8px 14px; scrollbar-width: thin; scrollbar-color: rgba(255,255,255,.14) transparent; }
+        .song-list::-webkit-scrollbar { width: 3px; }
+        .song-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,.14); border-radius: 2px; }
+
+        .song-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background .18s, transform .15s;
+            margin-bottom: 2px;
+            border: 1px solid transparent;
+            user-select: none;
+        }
+        .song-item:hover { background: var(--bg-panel-hover); transform: translateX(3px); }
+        .song-item.active { background: linear-gradient(135deg, rgba(216,180,254,.18), rgba(167,139,250,.13)); border-color: rgba(216,180,254,.28); }
+        .song-num { font-size: .66rem; color: var(--text-secondary); min-width: 20px; text-align: right; font-weight: 300; }
+        .song-item.active .song-num { color: var(--accent-start); }
+        .song-name-text { flex: 1; font-size: .85rem; line-height: 1.4; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .song-item.active .song-name-text { color: var(--accent-start); font-weight: 500; }
+        .item-arrow { flex-shrink: 0; opacity: 0; color: var(--accent-start); transition: opacity .18s; }
+        .song-item:hover .item-arrow, .song-item.active .item-arrow { opacity: 1; }
+
+        /* コンテンツエリア */
+        .content-wrap { flex: 1; overflow-y: auto; position: relative; scrollbar-width: thin; scrollbar-color: rgba(255,255,255,.14) transparent; }
+        .content-wrap::-webkit-scrollbar { width: 3px; }
+        .content-wrap::-webkit-scrollbar-thumb { background: rgba(255,255,255,.14); border-radius: 2px; }
+
+        /* ヒント画面 */
+        .hint-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100%;
+            padding: 48px 32px;
+            text-align: center;
+            gap: 14px;
+        }
+        .hint-logo { width: 110px; height: 110px; object-fit: contain; filter: drop-shadow(0 0 16px rgba(216,180,254,.30)); }
+        .hint-title { font-size: 1.1rem; font-weight: 500; color: var(--text-secondary); }
+
+        /* ファイルが見つからない */
+        .not-found-screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100%;
+            padding: 48px;
+            text-align: center;
+            gap: 12px;
+            color: var(--text-secondary);
+        }
+        .nf-name {
+            font-size: 1.4rem; font-weight: 800;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .nf-title { font-size: 1rem; color: var(--text-primary); }
+        .nf-hint { font-size: .82rem; line-height: 1.9; }
+        .nf-hint code { background: var(--bg-panel); border: 1px solid var(--border); padding: 2px 8px; border-radius: 5px; font-size: .80rem; color: var(--accent-start); }
+
+        /* 曲コンテンツ */
+        .song-content { display: none; padding: 52px 56px 80px; max-width: 800px; margin: 0 auto; animation: reveal .35s cubic-bezier(.4,0,.2,1); }
+        .song-content.visible { display: block; }
+
+        @keyframes reveal { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+        .content-title {
+            font-size: clamp(1.8rem, 4.5vw, 2.6rem); font-weight: 800;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+            line-height: 1.25; margin-bottom: 18px;
+        }
+        .content-rule { display: flex; align-items: center; gap: 10px; margin-bottom: 36px; }
+        .rule-line { width: 44px; height: 2px; background: var(--accent-gradient); border-radius: 2px; }
+        .rule-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent-start); opacity: .45; }
+
+        /* Markdownスタイル */
+        .md-body { font-weight: 300; line-height: 1.9; color: rgba(242,242,245,.84); }
+        .md-body h1 { font-size: 1.6rem; font-weight: 800; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin: 2em 0 .6em; line-height: 1.3; }
+        .md-body h1:first-child { margin-top: 0; }
+        .md-body h2 { font-size: 1.15rem; font-weight: 700; color: var(--accent-start); margin: 2em 0 .5em; letter-spacing: .04em; }
+        .md-body h2::before { content: '▍'; margin-right: 8px; opacity: .5; }
+        .md-body h3 { font-size: 1rem; font-weight: 500; color: rgba(242,242,245,.70); margin: 1.5em 0 .4em; letter-spacing: .06em; text-transform: uppercase; }
+        .md-body p { margin-bottom: 1.1em; line-height: 2.0; }
+        .md-body strong { font-weight: 700; color: #fff; }
+        .md-body em { font-style: italic; color: rgba(242,242,245,.70); }
+        .md-body hr { border: none; height: 1px; background: linear-gradient(90deg, transparent, var(--border), transparent); margin: 2em 0; }
+        .md-body ul, .md-body ol { padding-left: 1.4em; margin-bottom: 1em; }
+        .md-body li { margin-bottom: .4em; line-height: 1.8; }
+        .md-body ul li::marker { color: var(--accent-start); }
+        .md-body ol li::marker { color: var(--accent-start); font-weight: 500; }
+        .md-body code { background: rgba(255,255,255,.07); border: 1px solid var(--border); padding: 2px 8px; border-radius: 5px; font-size: .88em; color: var(--accent-start); }
+        .md-body pre { background: rgba(255,255,255,.05); border: 1px solid var(--border); border-radius: 10px; padding: 16px 20px; overflow-x: auto; margin-bottom: 1.2em; }
+        .md-body pre code { background: none; border: none; padding: 0; color: rgba(242,242,245,.85); font-size: .9em; line-height: 1.7; }
+        .md-body blockquote { border-left: 3px solid var(--accent-start); margin: 1.2em 0; padding: 8px 0 8px 20px; color: rgba(242,242,245,.60); font-style: italic; }
+        .md-body table { width: 100%; border-collapse: collapse; margin-bottom: 1.4em; font-size: .9rem; }
+        .md-body th { padding: 9px 14px; background: rgba(216,180,254,.12); border-bottom: 1px solid rgba(216,180,254,.25); text-align: left; font-weight: 500; color: var(--accent-start); }
+        .md-body td { padding: 8px 14px; border-bottom: 1px solid var(--border); }
+        .md-body tr:last-child td { border-bottom: none; }
+        .md-body img { max-width: 100%; border-radius: 10px; margin: 8px 0; }
+        .md-body a { color: var(--accent-start); text-decoration: none; border-bottom: 1px solid rgba(216,180,254,.35); transition: border-color .2s; }
+        .md-body a:hover { border-bottom-color: var(--accent-start); }
+
+        /* タイムスタンプリンク */
+        .ts-link {
+            display: inline-flex; align-items: center; gap: 4px;
+            padding: 1px 9px 1px 7px;
+            border-radius: 100px;
+            background: rgba(216,180,254,.12);
+            border: 1px solid rgba(216,180,254,.28);
+            color: var(--accent-start);
+            font-size: .82em; font-weight: 500;
+            cursor: pointer;
+            transition: background .18s, transform .15s;
+            white-space: nowrap; user-select: none;
+        }
+        .ts-link:hover { background: rgba(216,180,254,.22); transform: translateY(-1px); }
+        .ts-link::before { content: '▶'; font-size: .65em; opacity: .7; }
+
+        /* 動画プレーヤー */
+        .video-section { display: none; margin-top: 48px; }
+        .video-section.visible { display: block; }
+        .video-label { display: flex; align-items: center; gap: 8px; font-size: .72rem; letter-spacing: .16em; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 14px; }
+        .video-label::before { content: ''; display: inline-block; width: 28px; height: 1px; background: var(--accent-gradient); }
+        .video-player { width: 100%; border-radius: 14px; overflow: hidden; background: #000; box-shadow: 0 8px 32px rgba(0,0,0,.55); border: 1px solid var(--border); }
+        .video-player video { display: block; width: 100%; max-height: 480px; object-fit: contain; }
+
+        /* モバイル */
+        @media (max-width: 768px) {
+            .btn-icon { display: flex; }
+            .app-header { padding: 0 14px; height: 56px; }
+            .sidebar {
+                position: absolute; inset: 0 auto 0 0;
+                height: 100%; z-index: 60;
+                transform: translateX(-105%);
+                width: min(84%, 300px);
+            }
+            .sidebar.open { transform: translateX(0); box-shadow: 6px 0 30px rgba(0,0,0,.55); }
+            .sidebar-overlay { display: none; position: absolute; inset: 0; background: rgba(0,0,0,.55); z-index: 59; backdrop-filter: blur(3px); }
+            .sidebar-overlay.on { display: block; }
+            .song-content { padding: 28px 20px 60px; }
+        }
+
+        .kbd-hint { position: fixed; bottom: 16px; right: 18px; font-size: .66rem; color: var(--text-secondary); opacity: .4; pointer-events: none; letter-spacing: .06em; }
+        @media (max-width: 768px) { .kbd-hint { display: none; } }
+    </style>
+</head>
+<body>
+<div class="app">
+
+    <header class="app-header">
+        <div class="header-brand">
+            <div class="app-title">INUWASIのここがいい</div>
+            <div class="app-tagline">Song Notes</div>
+        </div>
+        <div class="header-right">
+            <button class="btn btn-icon" onclick="toggleSidebar()" aria-label="メニュー">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <line x1="3" y1="6"  x2="21" y2="6"/>
+                    <line x1="3" y1="12" x2="21" y2="12"/>
+                    <line x1="3" y1="18" x2="21" y2="18"/>
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <div class="app-body">
+        <div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+        <aside class="sidebar" id="sidebar">
+            <div class="setlist-tabs" id="setlistTabs"></div>
+            <div class="sidebar-top">
+                <div class="search-wrap">
+                    <svg class="search-icon-el" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+                    </svg>
+                    <input class="search-input" id="searchInput" type="search" placeholder="曲名を検索..." oninput="filterSongs(this.value)">
+                </div>
+            </div>
+            <div class="song-count" id="songCount"></div>
+            <div class="song-list" id="songList"></div>
+        </aside>
+
+        <main class="content-wrap" id="contentWrap">
+
+            <!-- ヒント画面 -->
+            <div class="hint-screen" id="hintScreen">
+                <img class="hint-logo" src="logo.png" alt="INUWASI logo">
+                <div class="hint-title">曲を選んでください</div>
+            </div>
+
+            <!-- ファイルが見つからない -->
+            <div class="not-found-screen" id="notFoundScreen">
+                <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" opacity=".45">
+                    <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+                    <line x1="8" y1="11" x2="14" y2="11"/>
+                </svg>
+                <div class="nf-name" id="nfName"></div>
+                <div class="nf-title">のファイルが見つかりませんでした</div>
+                <div class="nf-hint">
+                    <code id="nfFileName"></code> が<br>リポジトリにあるか確認してください。
+                </div>
+            </div>
+
+            <!-- 曲コンテンツ -->
+            <div class="song-content" id="songContent">
+                <div class="content-title" id="contentTitle"></div>
+                <div class="content-rule">
+                    <div class="rule-line"></div>
+                    <div class="rule-dot"></div>
+                    <div class="rule-dot"></div>
+                </div>
+                <div class="md-body" id="mdBody"></div>
+                <div class="video-section" id="videoSection">
+                    <div class="video-label">Video</div>
+                    <div class="video-player">
+                        <video id="videoPlayer" controls playsinline></video>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+</div>
+
+<div class="kbd-hint">↑ ↓ キーで曲を切り替え</div>
+
+<script>
+'use strict';
+
+if (typeof marked !== 'undefined') {
+    marked.setOptions({ breaks: true, gfm: true });
+}
+
+let SONGS    = [];
+let SETLISTS = [];
+let activeSetlistIdx = 0;
+let activeSongName   = null;
+let currentView      = [];
+
+const VIDEO_EXTS = ['mp4', 'mov', 'webm', 'm4v'];
+
+/* ---------------------------------------------------------------
+   起動：index.json を読んで初期化
+--------------------------------------------------------------- */
+window.addEventListener('DOMContentLoaded', () => {
+    showPanel('hintScreen');
+    init();
+});
+
+async function init() {
+    try {
+        const res  = await fetch('index.json');
+        const data = await res.json();
+
+        SONGS = (data.songs || []).sort((a, b) =>
+            a.localeCompare(b, undefined, { sensitivity: 'base' }));
+
+        const setlists = [{ label: '全曲', songs: null }];
+
+        for (const sl of (data.setlists || [])) {
+            try {
+                const r = await fetch(`${sl.folder}/setlist.md`);
+                if (!r.ok) {
+                    // setlist.md がなければ setlist.txt を試す
+                    const r2 = await fetch(`${sl.folder}/setlist.txt`);
+                    if (!r2.ok) continue;
+                    const text = await r2.text();
+                    const list = parseSetlistText(text);
+                    if (list.length > 0) setlists.push({ label: sl.folder.replace(/_/g, '/'), songs: list });
+                    continue;
+                }
+                const text = await r.text();
+                const list = parseSetlistText(text);
+                if (list.length > 0) {
+                    setlists.push({ label: sl.folder.replace(/_/g, '/'), songs: list });
+                }
+            } catch (_) {}
+        }
+
+        SETLISTS = setlists;
+        buildTabs();
+        refreshList();
+    } catch (e) {
+        console.error('index.json の読み込みに失敗:', e);
+    }
+}
+
+/* setlist テキストのパース */
+function parseSetlistText(text) {
+    return text.split('\n')
+        .map(s => s.trim())
+        .map(s => s.replace(/^[-*+]\s+/, '').replace(/^\d+\.\s+/, ''))
+        .map(s => s.trim())
+        .filter(s => s && !s.startsWith('#'))
+        .filter(s => SONGS.includes(s));
+}
+
+/* ---------------------------------------------------------------
+   タブ生成
+--------------------------------------------------------------- */
+function buildTabs() {
+    const container = document.getElementById('setlistTabs');
+    container.innerHTML = '';
+    SETLISTS.forEach((sl, i) => {
+        const tab = document.createElement('button');
+        tab.className = 'setlist-tab' + (i === activeSetlistIdx ? ' active' : '');
+        tab.textContent = sl.label;
+        tab.addEventListener('click', () => {
+            activeSetlistIdx = i;
+            document.querySelectorAll('.setlist-tab')
+                .forEach((t, ti) => t.classList.toggle('active', ti === i));
+            document.getElementById('searchInput').value = '';
+            refreshList();
+        });
+        container.appendChild(tab);
+    });
+}
+
+/* ---------------------------------------------------------------
+   リスト
+--------------------------------------------------------------- */
+function getSetlistSongs() {
+    if (!SETLISTS[activeSetlistIdx]) return [];
+    const sl = SETLISTS[activeSetlistIdx];
+    if (!sl.songs) return SONGS.map(name => ({ name }));
+    return sl.songs.filter(name => SONGS.includes(name)).map(name => ({ name }));
+}
+
+function refreshList(query = '') {
+    const q    = query.trim().toLowerCase();
+    const base = getSetlistSongs();
+    currentView = q ? base.filter(({ name }) => name.toLowerCase().includes(q)) : base;
+    renderList();
+}
+
+function renderList() {
+    const container = document.getElementById('songList');
+    const countEl   = document.getElementById('songCount');
+    container.innerHTML = '';
+    if (SONGS.length === 0) { countEl.textContent = ''; return; }
+    countEl.textContent = `${currentView.length} 曲`;
+    currentView.forEach(({ name }, i) => {
+        const item = document.createElement('div');
+        item.className = 'song-item' + (name === activeSongName ? ' active' : '');
+        item.dataset.name = name;
+        item.innerHTML = `
+            <span class="song-num">${i + 1}</span>
+            <span class="song-name-text">${esc(name)}</span>
+            <svg class="item-arrow" width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+                <polygon points="5 3 19 12 5 21 5 3"/>
+            </svg>`;
+        item.addEventListener('click', () => onSongClick(name));
+        container.appendChild(item);
+    });
+}
+
+/* ---------------------------------------------------------------
+   曲を開く
+--------------------------------------------------------------- */
+async function onSongClick(name) {
+    if (window.innerWidth <= 768) toggleSidebar(false);
+    await loadSong(name);
+}
+
+async function loadSong(name) {
+    const fileName = encodeURIComponent(name) + '.md';
+    setActive(name);
+    try {
+        const res = await fetch(fileName);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const rawText = await res.text();
+
+        document.getElementById('contentTitle').textContent = name;
+        const mdBody = document.getElementById('mdBody');
+        mdBody.innerHTML = (typeof marked !== 'undefined')
+            ? marked.parse(rawText)
+            : rawText.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/\n/g,'<br>');
+
+        linkifyTimestamps(mdBody);
+        showPanel('songContent');
+        document.getElementById('contentWrap').scrollTo({ top: 0, behavior: 'smooth' });
+        await loadVideo(name);
+    } catch (_) {
+        document.getElementById('nfName').textContent     = name;
+        document.getElementById('nfFileName').textContent = name + '.md';
+        showPanel('notFoundScreen');
+    }
+}
+
+/* ---------------------------------------------------------------
+   動画読み込み
+--------------------------------------------------------------- */
+async function loadVideo(name) {
+    const section = document.getElementById('videoSection');
+    const player  = document.getElementById('videoPlayer');
+
+    // 前の動画を完全にリセット
+    player.pause();
+    player.removeAttribute('src');
+    player.load();
+    section.classList.remove('visible');
+
+    for (const ext of VIDEO_EXTS) {
+        try {
+            const url = encodeURIComponent(name) + '.' + ext;
+            const res = await fetch(url, { method: 'HEAD' });
+            if (res.ok) {
+                player.src = url;
+                section.classList.add('visible');
+                return;
+            }
+        } catch (_) {}
+    }
+}
+
+/* ---------------------------------------------------------------
+   タイムスタンプのリンク化
+--------------------------------------------------------------- */
+function linkifyTimestamps(container) {
+    const walker = document.createTreeWalker(
+        container, NodeFilter.SHOW_TEXT,
+        {
+            acceptNode(node) {
+                let p = node.parentElement;
+                while (p && p !== container) {
+                    if (p.tagName === 'A' || p.classList.contains('ts-link')) return NodeFilter.FILTER_REJECT;
+                    p = p.parentElement;
+                }
+                return NodeFilter.FILTER_ACCEPT;
+            }
+        }
+    );
+    const TS_RE = /\b(\d{1,2}):(\d{2})(?::(\d{2}))?\b/g;
+    const nodes = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+    for (const node of nodes) {
+        const text = node.nodeValue;
+        if (!TS_RE.test(text)) continue;
+        TS_RE.lastIndex = 0;
+        const frag = document.createDocumentFragment();
+        let last = 0, m;
+        while ((m = TS_RE.exec(text)) !== null) {
+            if (m.index > last) frag.appendChild(document.createTextNode(text.slice(last, m.index)));
+            const [, a, b, c] = m;
+            const seconds = c
+                ? parseInt(a) * 3600 + parseInt(b) * 60 + parseInt(c)
+                : parseInt(a) * 60 + parseInt(b);
+            const span = document.createElement('span');
+            span.className = 'ts-link';
+            span.textContent = m[0];
+            span.dataset.t = seconds;
+            span.addEventListener('click', () => seekVideo(seconds));
+            frag.appendChild(span);
+            last = m.index + m[0].length;
+        }
+        if (last < text.length) frag.appendChild(document.createTextNode(text.slice(last)));
+        node.parentNode.replaceChild(frag, node);
+    }
+}
+
+function seekVideo(seconds) {
+    const player  = document.getElementById('videoPlayer');
+    const section = document.getElementById('videoSection');
+    if (!section.classList.contains('visible')) return;
+    player.currentTime = seconds;
+    player.play();
+    section.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+/* ---------------------------------------------------------------
+   ヘルパー
+--------------------------------------------------------------- */
+function setActive(name) {
+    activeSongName = name;
+    document.querySelectorAll('.song-item').forEach(el => {
+        el.classList.toggle('active', el.dataset.name === name);
+    });
+}
+
+function showPanel(which) {
+    const defs = { hintScreen:'block', notFoundScreen:'flex', songContent:'block' };
+    Object.keys(defs).forEach(id => {
+        const el = document.getElementById(id);
+        if (id === 'songContent') {
+            el.classList.toggle('visible', id === which);
+        } else {
+            el.style.display = (id === which) ? defs[id] : 'none';
+        }
+    });
+    if (which === 'songContent') {
+        const el = document.getElementById('songContent');
+        el.classList.remove('visible');
+        void el.offsetWidth;
+        el.classList.add('visible');
+    }
+}
+
+function filterSongs(query) { refreshList(query); }
+
+function toggleSidebar(forceOpen) {
+    const sb   = document.getElementById('sidebar');
+    const ov   = document.getElementById('overlay');
+    const open = typeof forceOpen === 'boolean' ? forceOpen : !sb.classList.contains('open');
+    sb.classList.toggle('open', open);
+    ov.classList.toggle('on', open);
+}
+
+function esc(s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+document.addEventListener('keydown', e => {
+    if (document.activeElement.tagName === 'INPUT') return;
+    const pos = currentView.findIndex(({ name }) => name === activeSongName);
+    if (e.key === 'ArrowDown' || e.key === 'j') {
+        e.preventDefault();
+        const next = currentView[Math.min(pos + 1, currentView.length - 1)];
+        if (next && next.name !== activeSongName) onSongClick(next.name);
+    }
+    if (e.key === 'ArrowUp' || e.key === 'k') {
+        e.preventDefault();
+        const prev = currentView[Math.max(pos - 1, 0)];
+        if (prev && prev.name !== activeSongName) onSongClick(prev.name);
+    }
+});
+</script>
+</body>
+</html>
