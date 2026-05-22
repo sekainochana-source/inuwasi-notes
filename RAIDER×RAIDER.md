@@ -23,9 +23,8 @@ RAIDER RAIDERの"Now現状が戦場で日々Living Living now 喝采を永遠を
 **あーちゃん**  3:00  
 RAIDER×RAIDERの<font color="red">すずめちゃん</font>「keep on move in」で手を頭の上にぴゅんってしてるとこ！歌い方表情含めて最高にどぅぁあってなります！
 
-
 ## 間奏
-**●●●●●●**  
+
 
 ## アウトロ
 **口だけ三日坊主** <font color="green">しもて</font> 3:39　  
