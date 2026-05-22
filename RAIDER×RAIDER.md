@@ -14,6 +14,10 @@
 RAIDER RAIDERの"Now現状が戦場で日々Living Living now 喝采を永遠を"の辺りのぴょんぴょんしてるとこ<font color="red">はのんまゆ</font>
 
 ## サビ
+**としぼ**  2:12
+
+<font color="red">カリヲリ</font>の２サビ
+
 **あーちゃん**  3:00
 
 RAIDER×RAIDERの<font color="red">すずめちゃん</font>「keep on move in」で手を頭の上にぴゅんってしてるとこ！歌い方表情含めて最高にどぅぁあってなります！
