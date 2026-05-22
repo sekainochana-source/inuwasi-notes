@@ -5,11 +5,11 @@ RAIDER×RAIDERの振りがめっちゃ好きです
 ## イントロ
 
 ## Aメロ
-**あいぽん**  <font color="red">かみて</font> 0:12
+**あいぽん**  <font color="green">かみて</font> 0:12
 サブリミナルなギミックの<font color="red">ライカちゃん</font>
 
 ## Bメロ
-**豆挽き**  <font color="red">かみて</font> 0:36
+**豆挽き**  <font color="green">かみて</font> 0:36
 RAIDER RAIDERの"Now現状が戦場で日々Living Living now 喝采を永遠を"の辺りのぴょんぴょんしてるとこ<font color="red">はのんまゆ</font>
 
 ## サビ
@@ -28,10 +28,10 @@ RAIDER×RAIDERの<font color="red">すずめちゃん</font>「keep on move in�
 **●●●●●●**  
 
 ## アウトロ
-**口だけ三日坊主** <font color="red">かみて</font> 3:39　
+**口だけ三日坊主** <font color="green">かみて</font> 3:39　
 アウトロでドヤドヤしながら前に来るドヤヲリが好きです、最後のドヤ顔もきゃわヲリ
 
-**はるき** <font color="red">かみて</font> 3:39　
+**はるき** <font color="green">かみて</font> 3:39　
 <font color="red">はのんまゆ</font>の最後のキメ顔
 
 **夜葉みなか** <font color="red">引き</font> 3:39　
