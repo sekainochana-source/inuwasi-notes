@@ -28,7 +28,7 @@ RAIDER×RAIDERの<font color="red">すずめちゃん</font>「keep on move in�
 **●●●●●●**  
 
 ## アウトロ
-**口だけ三日坊主** <font color="green">かみて</font> 3:39　  
+**口だけ三日坊主** <font color="green">しもて</font> 3:39　  
 アウトロでドヤドヤしながら前に来るドヤヲリが好きです、最後のドヤ顔もきゃわヲリ
 
 **はるき** <font color="green">かみて</font> 3:39  
