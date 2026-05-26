@@ -601,6 +601,11 @@ const VIDEO_EXTS = ['mp4', 'mov', 'webm', 'm4v'];
 // ページを開くたびにキャッシュを無視して最新ファイルを取得する
 const CB = '?t=' + Date.now();
 
+// ★ GitHubリポジトリ設定 ★
+const REPO_OWNER = 'sekainochana-source';
+const REPO_NAME  = 'inuwasi-notes';
+const REPO_API   = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/`;
+
 /* ---------------------------------------------------------------
    起動：index.json を読んで初期化
 --------------------------------------------------------------- */
@@ -611,30 +616,43 @@ window.addEventListener('DOMContentLoaded', () => {
 
 async function init() {
     try {
-        const res  = await fetch('index.json' + CB);
-        const data = await res.json();
+        // GitHub API でリポジトリのファイル一覧を自動取得
+        const res   = await fetch(REPO_API + CB);
+        const items = await res.json();
 
-        SONGS = (data.songs || []).sort((a, b) =>
-            a.localeCompare(b, undefined, { sensitivity: 'base' }));
+        if (!Array.isArray(items)) throw new Error('API response error');
+
+        // .md ファイル → 曲名（README.md・setlist.md は除外）
+        SONGS = items
+            .filter(item =>
+                item.type === 'file' &&
+                /\.md$/i.test(item.name) &&
+                !/^(readme|setlist)\.md$/i.test(item.name)
+            )
+            .map(item => item.name.replace(/\.md$/i, ''))
+            .sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
+
+        // サブフォルダ → setlist.md があればセットリストタブに追加
+        const dirs = items
+            .filter(item => item.type === 'dir')
+            .sort((a, b) => a.name.localeCompare(b.name));
 
         const setlists = [{ label: '全曲', songs: null }];
 
-        for (const sl of (data.setlists || [])) {
+        for (const dir of dirs) {
             try {
-                const r = await fetch(`${sl.folder}/setlist.md` + CB);
-                if (!r.ok) {
-                    // setlist.md がなければ setlist.txt を試す
-                    const r2 = await fetch(`${sl.folder}/setlist.txt` + CB);
-                    if (!r2.ok) continue;
-                    const text = await r2.text();
-                    const list = parseSetlistText(text);
-                    if (list.length > 0) setlists.push({ label: sl.folder.replace(/_/g, '/'), songs: list });
-                    continue;
+                let text = null;
+                const r = await fetch(`${dir.name}/setlist.md` + CB);
+                if (r.ok) {
+                    text = await r.text();
+                } else {
+                    const r2 = await fetch(`${dir.name}/setlist.txt` + CB);
+                    if (r2.ok) text = await r2.text();
                 }
-                const text = await r.text();
+                if (!text) continue;
                 const list = parseSetlistText(text);
                 if (list.length > 0) {
-                    setlists.push({ label: sl.folder.replace(/_/g, '/'), songs: list });
+                    setlists.push({ label: dir.name.replace(/_/g, '/'), songs: list });
                 }
             } catch (_) {}
         }
@@ -642,8 +660,9 @@ async function init() {
         SETLISTS = setlists;
         buildTabs();
         refreshList();
+
     } catch (e) {
-        console.error('index.json の読み込みに失敗:', e);
+        console.error('GitHub APIの読み込みに失敗:', e);
     }
 }
 
