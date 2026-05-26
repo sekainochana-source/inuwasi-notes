@@ -598,6 +598,9 @@ let currentView      = [];
 
 const VIDEO_EXTS = ['mp4', 'mov', 'webm', 'm4v'];
 
+// ページを開くたびにキャッシュを無視して最新ファイルを取得する
+const CB = '?t=' + Date.now();
+
 /* ---------------------------------------------------------------
    起動：index.json を読んで初期化
 --------------------------------------------------------------- */
@@ -608,7 +611,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
 async function init() {
     try {
-        const res  = await fetch('index.json');
+        const res  = await fetch('index.json' + CB);
         const data = await res.json();
 
         SONGS = (data.songs || []).sort((a, b) =>
@@ -618,10 +621,10 @@ async function init() {
 
         for (const sl of (data.setlists || [])) {
             try {
-                const r = await fetch(`${sl.folder}/setlist.md`);
+                const r = await fetch(`${sl.folder}/setlist.md` + CB);
                 if (!r.ok) {
                     // setlist.md がなければ setlist.txt を試す
-                    const r2 = await fetch(`${sl.folder}/setlist.txt`);
+                    const r2 = await fetch(`${sl.folder}/setlist.txt` + CB);
                     if (!r2.ok) continue;
                     const text = await r2.text();
                     const list = parseSetlistText(text);
@@ -725,7 +728,7 @@ async function loadSong(name) {
     const fileName = encodeURIComponent(name) + '.md';
     setActive(name);
     try {
-        const res = await fetch(fileName);
+        const res = await fetch(fileName + CB);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const rawText = await res.text();
 
